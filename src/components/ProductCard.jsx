@@ -1,4 +1,5 @@
 import { Card, Button } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import { useState } from 'react'
 
 function ProductCard({ id, nombre, precio, agregarAlCarrito }) {
@@ -15,13 +16,14 @@ function ProductCard({ id, nombre, precio, agregarAlCarrito }) {
 
         <Button
           variant="warning"
-          className="me-2"
+          className="me-2 mb-2"
           onClick={() => setFavorito(!favorito)}
         >
           {favorito ? '★ Favorito' : '☆ Favorito'}
         </Button>
 
         <Button
+          className="me-2 mb-2"
           onClick={() =>
             agregarAlCarrito({
               id,
@@ -31,6 +33,15 @@ function ProductCard({ id, nombre, precio, agregarAlCarrito }) {
           }
         >
           Agregar al carrito
+        </Button>
+
+        <Button
+          as={Link}
+          to={`/producto/${id}`}
+          variant="secondary"
+          className="mb-2"
+        >
+          Ver producto
         </Button>
       </Card.Body>
     </Card>

@@ -1,10 +1,15 @@
 import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Form, Button, Alert, Container } from 'react-bootstrap'
 
 function Registro() {
   const [nombre, setNombre] = useState('')
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
+
+  const location = useLocation()
+  const parametros = new URLSearchParams(location.search)
+  const origen = parametros.get('origen')
 
   function enviarFormulario(event) {
     event.preventDefault()
@@ -27,8 +32,13 @@ function Registro() {
     <Container className="mt-4">
       <h2>Registro</h2>
 
-      <Form onSubmit={enviarFormulario}>
+      {origen === 'producto' && (
+        <Alert variant="info">
+          Llegaste al registro desde un producto.
+        </Alert>
+      )}
 
+      <Form onSubmit={enviarFormulario}>
         <Form.Control
           type="text"
           value={nombre}
