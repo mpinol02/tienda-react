@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
-import ProductCard from '../components/ProductCard'
+import { Container } from 'react-bootstrap'
+import ProductList from '../components/ProductList'
 import ShoppingCart from '../components/ShoppingCart'
 
 function Inicio() {
@@ -22,7 +22,10 @@ function Inicio() {
   })
 
   useEffect(() => {
-    sessionStorage.setItem('carrito', JSON.stringify(carrito))
+    sessionStorage.setItem(
+      'carrito',
+      JSON.stringify(carrito)
+    )
   }, [carrito])
 
   function agregarAlCarrito(producto) {
@@ -31,16 +34,16 @@ function Inicio() {
     )
 
     if (productoExistente) {
-      const carritoActualizado = carrito.map((item) =>
-        item.id === producto.id
-          ? {
-              ...item,
-              cantidad: item.cantidad + 1,
-            }
-          : item
+      setCarrito(
+        carrito.map((item) =>
+          item.id === producto.id
+            ? {
+                ...item,
+                cantidad: item.cantidad + 1,
+              }
+            : item
+        )
       )
-
-      setCarrito(carritoActualizado)
     } else {
       setCarrito([
         ...carrito,
@@ -66,23 +69,11 @@ function Inicio() {
     <Container className="mt-4">
       <h1>Catálogo</h1>
 
-      <Row className="g-3">
-        {productos.map((producto) => (
-          <Col
-            key={producto.id}
-            xs={12}
-            md={6}
-            lg={4}
-          >
-            <ProductCard
-              id={producto.id}
-              nombre={producto.nombre}
-              precio={producto.precio}
-              agregarAlCarrito={agregarAlCarrito}
-            />
-          </Col>
-        ))}
-      </Row>
+      <ProductList
+        productos={productos}
+        carrito={carrito}
+        agregarAlCarrito={agregarAlCarrito}
+      />
 
       <ShoppingCart
         carrito={carrito}

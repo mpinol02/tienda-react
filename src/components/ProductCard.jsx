@@ -2,7 +2,13 @@ import { Card, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 
-function ProductCard({ id, nombre, precio, agregarAlCarrito }) {
+function ProductCard({
+  id,
+  nombre,
+  precio,
+  cantidadEnCarrito,
+  agregarAlCarrito,
+}) {
   const [favorito, setFavorito] = useState(false)
 
   return (
@@ -32,7 +38,9 @@ function ProductCard({ id, nombre, precio, agregarAlCarrito }) {
             })
           }
         >
-          Agregar al carrito
+          {cantidadEnCarrito > 0
+            ? `Agregado (${cantidadEnCarrito})`
+            : 'Agregar al carrito'}
         </Button>
 
         <Button
