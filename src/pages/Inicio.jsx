@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import ProductCard from '../components/ProductCard'
+import ShoppingCart from '../components/ShoppingCart'
 
 function Inicio() {
   const productos = [
@@ -8,6 +10,57 @@ function Inicio() {
     { id: 3, nombre: 'Audífonos', precio: 24990 },
     { id: 4, nombre: 'Monitor', precio: 89990 },
   ]
+
+  const [carrito, setCarrito] = useState(() => {
+    const carritoGuardado = sessionStorage.getItem('carrito')
+
+    if (carritoGuardado) {
+      return JSON.parse(carritoGuardado)
+    }
+
+    return []
+  })
+
+  useEffect(() => {
+    sessionStorage.setItem('carrito', JSON.stringify(carrito))
+  }, [carrito])
+
+  function agregarAlCarrito(producto) {
+    const productoExistente = carrito.find(
+      (item) => item.id === producto.id
+    )
+
+    if (productoExistente) {
+      const carritoActualizado = carrito.map((item) =>
+        item.id === producto.id
+          ? {
+              ...item,
+              cantidad: item.cantidad + 1,
+            }
+          : item
+      )
+
+      setCarrito(carritoActualizado)
+    } else {
+      setCarrito([
+        ...carrito,
+        {
+          ...producto,
+          cantidad: 1,
+        },
+      ])
+    }
+  }
+
+  function vaciarCarrito() {
+    setCarrito([])
+  }
+
+  const total = carrito.reduce(
+    (acumulador, producto) =>
+      acumulador + producto.precio * producto.cantidad,
+    0
+  )
 
   return (
     <Container className="mt-4">
@@ -22,12 +75,20 @@ function Inicio() {
             lg={4}
           >
             <ProductCard
+              id={producto.id}
               nombre={producto.nombre}
               precio={producto.precio}
+              agregarAlCarrito={agregarAlCarrito}
             />
           </Col>
         ))}
       </Row>
+
+      <ShoppingCart
+        carrito={carrito}
+        total={total}
+        vaciarCarrito={vaciarCarrito}
+      />
     </Container>
   )
 }
